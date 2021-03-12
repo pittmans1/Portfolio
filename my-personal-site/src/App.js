@@ -9,27 +9,42 @@ import {
   import Why from "./advice/Why"
   import Home from "./Home"
   const axios = require('axios')
-  const one = "https://api.adviceslip.com/advice"
+  const one = "https://api.adviceslip.com/advice/search/love"
+  const two = "https://api.adviceslip.com/advice/search/life"
+  const three = "https://api.adviceslip.com/advice"
 
   function App(props) {
 
-        const[advice, adviceData]=useState("")
-
+        const[loveAdvice, adviceDataLove]=useState("")
+        const[lifeAdvice, adviceDataLife]=useState("")
+        const [Advice, adviceDataRandom]= useState("")
         useEffect(() => {
             axios.get(one)
-            .then(res => {
-                adviceData(res.data.slip.advice)
+            .then(res =>{
+                adviceDataLove(res.data.slips)
             })
         }, [])
+        useEffect(()=>{
+            axios.get(two)
+            .then(res => 
+               { adviceDataLife(res.data.slips)
+            })
+        },[])
+        useEffect(() => {
+            axios.get(three)
+            .then(res =>{
+                adviceDataRandom(res.data.slip.advice)
+            })
+        })
       return(
-          
+          <div>
               <div id="navBar">
                   <Link to="/">Home</Link>
                   <Link to="/about">About</Link>
                   <Link to="/why">WHY? We all need advice!</Link>
-
+                </div>
                   <Switch>
-                  <Route exact path="/"><Home advice={advice}/></Route>
+                  <Route exact path="/"><Home loveAdvice={loveAdvice} lifeAdvice={lifeAdvice} Advice={Advice}/></Route>
                   <Route path="/about"><About /></Route>
                   <Route path="/why"><Why /></Route>
                   </Switch>
